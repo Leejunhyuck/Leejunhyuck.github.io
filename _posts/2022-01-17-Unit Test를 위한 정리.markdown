@@ -1,0 +1,62 @@
+---
+layout: post
+title: Unit Test를 위한 정리
+date: 2021-01-17 18:34:23 +0900
+category: Test
+---
+# Spring boot test를 위한 정리
+|버전|Spring MVC 테스트|단위 테스트(Mockito)|Spring 통합테스트|
+|------|---|---|---|
+|Spring boot 2.2 이전|@RunWith(MockitoJUnitRunner.class)|@RunWith(MockitoJUnitRunner.class)|@RunWith(SpringRunner.class)
+|Spring boot 2.2 이후|@WebMvcTest|@ExtendWith(MockitoExtension.class)|@SpringBootTest|
+
+버전	Spring MVC 테스트	단위 테스트(Mockito)	Spring 통합테스트
+Spring boot 2.2 이전	@RunWith(MockitoJUnitRunner.class)	@RunWith(MockitoJUnitRunner.class)	@RunWith(SpringRunner.class)
+@SpringBootTest
+Spring boot 2.2 이후	@WebMvcTest	@ExtendWith(MockitoExtension.class)	@SpringBootTest
+
+
+테스트 프레임워크 : Junit5     ->     junit-jupiter-api (기존 구성)
+
+* Controller 테스트 -> WebMvcTest 가벼움 Controller 테스트하기 적합  -> Restdocs를 사용한 파라미터 검증.   -> MockMvc(@WebMvcTest)
+
+
+* Service, Repository (나머지 단위 테스트) -> @ExtendWith(SpringExtension::class). , MockitoExtension.class.       => Mock -> kotlin Mokito (given when then)
+
+
+* 통합테스트 -> @SpringBootTest =>  Rest Assured(@SpringBootTest)
+
+* 테스트 커버리지 체크 : Jacoco
+
+1. 패키지 구조는 그대로 (도메인별)
+2. 최상위 패키지는 Unit, Integretion
+
+---
+```
+//given -> 기존 상태 저장, mockito 생성
+var stateHistory = stateeHistory(id = "123", status = Status.INIT).apply{chgDesc = "테스트"}
+
+//when -> 업데이트 -> 실제로 액션을 하는 것 (보통 한 줄이면 끝난다.)
+stateService.updateState(stateHistory)
+
+//then -> 결과 확인 (테스트를 검증하는 과정, 실험을 통해서 나온 값을 검증한다.)
+assertEquals(stateHistory.status, stateService.getItem("123").orElseThrow{ Exception("") }.status )
+```
+
+---
+고려사항
+
+
+1. 테스트 진행시,  레이어별 명확한 경계가 없어서 생기는 문제 점
+
+    Service -> service (순환 참조되는 경우)
+
+    Api 호출이 서비스 레이어에 같이 있는 경우
+
+2. 테스트 범위는 어느정도까지 할 것인지
+
+    모든 메서드
+
+    중요 기능별(?)
+
+3. 테스트 규약 정하기
