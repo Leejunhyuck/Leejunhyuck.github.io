@@ -1,0 +1,12 @@
+---
+layout: post
+title: Jpa 기본 쿼리 모음
+date: 2021-02-07 03:50:00 +0900
+category: JPA
+---
+# Jpa 기본 쿼리 모음
+
+* findFirstBy
+  * 조회시 가장 첫번째 하나만 조회한다.
+* findTop300ByOrderById
+  * id로 정렬 후 위에서 300개를 조회한다.

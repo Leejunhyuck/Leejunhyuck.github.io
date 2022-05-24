@@ -1,6 +1,6 @@
 ---
 layout: post
-title: is Prefix로 변수 선언시 직렬화 과정에서 누락되는 것 해결 방안
+title: MutableList, ArrayList 빈 값 초기화 방법
 date: 2021-02-07 03:50:00 +0900
 category: Grammar
 ---
